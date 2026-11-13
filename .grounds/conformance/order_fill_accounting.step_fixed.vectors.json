@@ -1,0 +1,807 @@
+{
+  "format": "grounds-vectors/1",
+  "technique": "regions",
+  "engine": "imandrax",
+  "function": "step_fixed",
+  "symbol": "order fill accounting",
+  "params": [
+    "s",
+    "r"
+  ],
+  "signature": "fstate -> report -> fstate",
+  "model": {
+    "hash": "e270eb81f3d72d777fa54eb7d9c2a970d343eb6eb5c298d6eacb88f46075a7e3"
+  },
+  "assuming": null,
+  "vectors": [
+    {
+      "id": "step_fixed_c1",
+      "region": null,
+      "constraints": [],
+      "input": {
+        "r": {
+          "kind": {
+            "$c": "KOther"
+          },
+          "trans": {
+            "$c": "TNew"
+          },
+          "ref_id": 1,
+          "cum_qty": {
+            "$c": "Some",
+            "args": [
+              4
+            ]
+          },
+          "exec_id": 0,
+          "last_px": 3,
+          "last_qty": 2
+        },
+        "s": {
+          "f_cum": 0,
+          "fills": []
+        }
+      },
+      "expected": {
+        "f_cum": 4,
+        "fills": []
+      },
+      "why": "chosen"
+    },
+    {
+      "id": "step_fixed_c2",
+      "region": null,
+      "constraints": [],
+      "input": {
+        "r": {
+          "kind": {
+            "$c": "KFill"
+          },
+          "trans": {
+            "$c": "TNew"
+          },
+          "ref_id": 2,
+          "cum_qty": {
+            "$c": "Some",
+            "args": [
+              4
+            ]
+          },
+          "exec_id": 1,
+          "last_px": 3,
+          "last_qty": 0
+        },
+        "s": {
+          "f_cum": 0,
+          "fills": []
+        }
+      },
+      "expected": {
+        "f_cum": 4,
+        "fills": []
+      },
+      "why": "chosen"
+    },
+    {
+      "id": "step_fixed_c3",
+      "region": null,
+      "constraints": [],
+      "input": {
+        "r": {
+          "kind": {
+            "$c": "KFill"
+          },
+          "trans": {
+            "$c": "TNew"
+          },
+          "ref_id": 2,
+          "cum_qty": {
+            "$c": "Some",
+            "args": [
+              5
+            ]
+          },
+          "exec_id": 0,
+          "last_px": 3,
+          "last_qty": 1
+        },
+        "s": {
+          "f_cum": 4,
+          "fills": [
+            {
+              "fid": 0,
+              "fpx": 7,
+              "fqty": 6
+            }
+          ]
+        }
+      },
+      "expected": {
+        "f_cum": 5,
+        "fills": [
+          {
+            "fid": 0,
+            "fqty": 6,
+            "fpx": 7
+          }
+        ]
+      },
+      "why": "chosen"
+    },
+    {
+      "id": "step_fixed_c4",
+      "region": null,
+      "constraints": [],
+      "input": {
+        "r": {
+          "kind": {
+            "$c": "KFill"
+          },
+          "trans": {
+            "$c": "TNew"
+          },
+          "ref_id": 2,
+          "cum_qty": {
+            "$c": "Some",
+            "args": [
+              5
+            ]
+          },
+          "exec_id": 0,
+          "last_px": 3,
+          "last_qty": 1
+        },
+        "s": {
+          "f_cum": 4,
+          "fills": []
+        }
+      },
+      "expected": {
+        "f_cum": 5,
+        "fills": [
+          {
+            "fid": 0,
+            "fqty": 1,
+            "fpx": 3
+          }
+        ]
+      },
+      "why": "chosen"
+    },
+    {
+      "id": "step_fixed_c5",
+      "region": null,
+      "constraints": [],
+      "input": {
+        "r": {
+          "kind": {
+            "$c": "KFill"
+          },
+          "trans": {
+            "$c": "TCorrect"
+          },
+          "ref_id": 1,
+          "cum_qty": {
+            "$c": "Some",
+            "args": [
+              5
+            ]
+          },
+          "exec_id": 0,
+          "last_px": 3,
+          "last_qty": 2
+        },
+        "s": {
+          "f_cum": 4,
+          "fills": []
+        }
+      },
+      "expected": {
+        "f_cum": 5,
+        "fills": []
+      },
+      "why": "chosen"
+    },
+    {
+      "id": "step_fixed_c6",
+      "region": null,
+      "constraints": [],
+      "input": {
+        "r": {
+          "kind": {
+            "$c": "KFill"
+          },
+          "trans": {
+            "$c": "TCorrect"
+          },
+          "ref_id": 0,
+          "cum_qty": {
+            "$c": "Some",
+            "args": [
+              4
+            ]
+          },
+          "exec_id": 5,
+          "last_px": 2,
+          "last_qty": 1
+        },
+        "s": {
+          "f_cum": 3,
+          "fills": [
+            {
+              "fid": 5,
+              "fpx": 7,
+              "fqty": 6
+            },
+            {
+              "fid": 0,
+              "fpx": 9,
+              "fqty": 8
+            }
+          ]
+        }
+      },
+      "expected": {
+        "f_cum": 4,
+        "fills": [
+          {
+            "fid": 5,
+            "fqty": 6,
+            "fpx": 7
+          },
+          {
+            "fid": 0,
+            "fqty": 8,
+            "fpx": 9
+          }
+        ]
+      },
+      "why": "chosen"
+    },
+    {
+      "id": "step_fixed_c7",
+      "region": null,
+      "constraints": [],
+      "input": {
+        "r": {
+          "kind": {
+            "$c": "KFill"
+          },
+          "trans": {
+            "$c": "TCorrect"
+          },
+          "ref_id": 1,
+          "cum_qty": {
+            "$c": "Some",
+            "args": [
+              5
+            ]
+          },
+          "exec_id": 0,
+          "last_px": 3,
+          "last_qty": 2
+        },
+        "s": {
+          "f_cum": 4,
+          "fills": [
+            {
+              "fid": 1,
+              "fpx": 7,
+              "fqty": 6
+            }
+          ]
+        }
+      },
+      "expected": {
+        "f_cum": 5,
+        "fills": [
+          {
+            "fid": 0,
+            "fqty": 2,
+            "fpx": 3
+          }
+        ]
+      },
+      "why": "chosen"
+    },
+    {
+      "id": "step_fixed_c8",
+      "region": null,
+      "constraints": [],
+      "input": {
+        "r": {
+          "kind": {
+            "$c": "KFill"
+          },
+          "trans": {
+            "$c": "TBust"
+          },
+          "ref_id": 1,
+          "cum_qty": {
+            "$c": "Some",
+            "args": [
+              4
+            ]
+          },
+          "exec_id": 0,
+          "last_px": 3,
+          "last_qty": 2
+        },
+        "s": {
+          "f_cum": 0,
+          "fills": []
+        }
+      },
+      "expected": {
+        "f_cum": 4,
+        "fills": []
+      },
+      "why": "chosen"
+    },
+    {
+      "id": "step_fixed_c9",
+      "region": null,
+      "constraints": [],
+      "input": {
+        "r": {
+          "kind": {
+            "$c": "KOther"
+          },
+          "trans": {
+            "$c": "TNew"
+          },
+          "ref_id": 1,
+          "cum_qty": {
+            "$c": "None"
+          },
+          "exec_id": 0,
+          "last_px": 3,
+          "last_qty": 2
+        },
+        "s": {
+          "f_cum": 0,
+          "fills": []
+        }
+      },
+      "expected": {
+        "f_cum": 0,
+        "fills": []
+      },
+      "why": "chosen"
+    },
+    {
+      "id": "step_fixed_c10",
+      "region": null,
+      "constraints": [],
+      "input": {
+        "r": {
+          "kind": {
+            "$c": "KFill"
+          },
+          "trans": {
+            "$c": "TNew"
+          },
+          "ref_id": 2,
+          "cum_qty": {
+            "$c": "None"
+          },
+          "exec_id": 1,
+          "last_px": 3,
+          "last_qty": 0
+        },
+        "s": {
+          "f_cum": 0,
+          "fills": []
+        }
+      },
+      "expected": {
+        "f_cum": 0,
+        "fills": []
+      },
+      "why": "chosen"
+    },
+    {
+      "id": "step_fixed_c11",
+      "region": null,
+      "constraints": [],
+      "input": {
+        "r": {
+          "kind": {
+            "$c": "KFill"
+          },
+          "trans": {
+            "$c": "TNew"
+          },
+          "ref_id": 2,
+          "cum_qty": {
+            "$c": "None"
+          },
+          "exec_id": 0,
+          "last_px": 3,
+          "last_qty": 1
+        },
+        "s": {
+          "f_cum": 4,
+          "fills": [
+            {
+              "fid": 0,
+              "fpx": 6,
+              "fqty": 5
+            }
+          ]
+        }
+      },
+      "expected": {
+        "f_cum": 4,
+        "fills": [
+          {
+            "fid": 0,
+            "fqty": 5,
+            "fpx": 6
+          }
+        ]
+      },
+      "why": "chosen"
+    },
+    {
+      "id": "step_fixed_c12",
+      "region": null,
+      "constraints": [],
+      "input": {
+        "r": {
+          "kind": {
+            "$c": "KFill"
+          },
+          "trans": {
+            "$c": "TNew"
+          },
+          "ref_id": 2,
+          "cum_qty": {
+            "$c": "None"
+          },
+          "exec_id": 0,
+          "last_px": 3,
+          "last_qty": 1
+        },
+        "s": {
+          "f_cum": 4,
+          "fills": []
+        }
+      },
+      "expected": {
+        "f_cum": 4,
+        "fills": [
+          {
+            "fid": 0,
+            "fqty": 1,
+            "fpx": 3
+          }
+        ]
+      },
+      "why": "chosen"
+    },
+    {
+      "id": "step_fixed_c13",
+      "region": null,
+      "constraints": [],
+      "input": {
+        "r": {
+          "kind": {
+            "$c": "KFill"
+          },
+          "trans": {
+            "$c": "TCorrect"
+          },
+          "ref_id": 1,
+          "cum_qty": {
+            "$c": "None"
+          },
+          "exec_id": 0,
+          "last_px": 3,
+          "last_qty": 2
+        },
+        "s": {
+          "f_cum": 4,
+          "fills": []
+        }
+      },
+      "expected": {
+        "f_cum": 4,
+        "fills": []
+      },
+      "why": "chosen"
+    },
+    {
+      "id": "step_fixed_c14",
+      "region": null,
+      "constraints": [],
+      "input": {
+        "r": {
+          "kind": {
+            "$c": "KFill"
+          },
+          "trans": {
+            "$c": "TCorrect"
+          },
+          "ref_id": 0,
+          "cum_qty": {
+            "$c": "None"
+          },
+          "exec_id": 4,
+          "last_px": 2,
+          "last_qty": 1
+        },
+        "s": {
+          "f_cum": 3,
+          "fills": [
+            {
+              "fid": 4,
+              "fpx": 6,
+              "fqty": 5
+            },
+            {
+              "fid": 0,
+              "fpx": 8,
+              "fqty": 7
+            }
+          ]
+        }
+      },
+      "expected": {
+        "f_cum": 3,
+        "fills": [
+          {
+            "fid": 4,
+            "fqty": 5,
+            "fpx": 6
+          },
+          {
+            "fid": 0,
+            "fqty": 7,
+            "fpx": 8
+          }
+        ]
+      },
+      "why": "chosen"
+    },
+    {
+      "id": "step_fixed_c15",
+      "region": null,
+      "constraints": [],
+      "input": {
+        "r": {
+          "kind": {
+            "$c": "KFill"
+          },
+          "trans": {
+            "$c": "TCorrect"
+          },
+          "ref_id": 1,
+          "cum_qty": {
+            "$c": "None"
+          },
+          "exec_id": 0,
+          "last_px": 3,
+          "last_qty": 2
+        },
+        "s": {
+          "f_cum": 4,
+          "fills": [
+            {
+              "fid": 1,
+              "fpx": 6,
+              "fqty": 5
+            }
+          ]
+        }
+      },
+      "expected": {
+        "f_cum": 4,
+        "fills": [
+          {
+            "fid": 0,
+            "fqty": 2,
+            "fpx": 3
+          }
+        ]
+      },
+      "why": "chosen"
+    },
+    {
+      "id": "step_fixed_c16",
+      "region": null,
+      "constraints": [],
+      "input": {
+        "r": {
+          "kind": {
+            "$c": "KFill"
+          },
+          "trans": {
+            "$c": "TBust"
+          },
+          "ref_id": 1,
+          "cum_qty": {
+            "$c": "None"
+          },
+          "exec_id": 0,
+          "last_px": 3,
+          "last_qty": 2
+        },
+        "s": {
+          "f_cum": 0,
+          "fills": []
+        }
+      },
+      "expected": {
+        "f_cum": 0,
+        "fills": []
+      },
+      "why": "chosen"
+    },
+    {
+      "id": "step_fixed_c17",
+      "region": null,
+      "constraints": [],
+      "input": {
+        "r": {
+          "kind": {
+            "$c": "KFill"
+          },
+          "trans": {
+            "$c": "TBust"
+          },
+          "ref_id": 1,
+          "cum_qty": {
+            "$c": "Some",
+            "args": [
+              3
+            ]
+          },
+          "exec_id": 0,
+          "last_px": 7,
+          "last_qty": 6
+        },
+        "s": {
+          "f_cum": 9,
+          "fills": [
+            {
+              "fid": 1,
+              "fpx": 7,
+              "fqty": 6
+            },
+            {
+              "fid": 2,
+              "fpx": 4,
+              "fqty": 3
+            }
+          ]
+        }
+      },
+      "expected": {
+        "f_cum": 3,
+        "fills": [
+          {
+            "fid": 2,
+            "fqty": 3,
+            "fpx": 4
+          }
+        ]
+      },
+      "why": "chosen"
+    },
+    {
+      "id": "step_fixed_c18",
+      "region": null,
+      "constraints": [],
+      "input": {
+        "r": {
+          "kind": {
+            "$c": "KFill"
+          },
+          "trans": {
+            "$c": "TBust"
+          },
+          "ref_id": 2,
+          "cum_qty": {
+            "$c": "None"
+          },
+          "exec_id": 0,
+          "last_px": 4,
+          "last_qty": 3
+        },
+        "s": {
+          "f_cum": 9,
+          "fills": [
+            {
+              "fid": 1,
+              "fpx": 7,
+              "fqty": 6
+            },
+            {
+              "fid": 2,
+              "fpx": 4,
+              "fqty": 3
+            }
+          ]
+        }
+      },
+      "expected": {
+        "f_cum": 9,
+        "fills": [
+          {
+            "fid": 1,
+            "fqty": 6,
+            "fpx": 7
+          }
+        ]
+      },
+      "why": "chosen"
+    }
+  ],
+  "without": [
+    {
+      "region": 1,
+      "why": "the model's output at its sample point was not computed"
+    },
+    {
+      "region": 2,
+      "why": "the model's output at its sample point was not computed"
+    },
+    {
+      "region": 3,
+      "why": "the model's output at its sample point was not computed"
+    },
+    {
+      "region": 4,
+      "why": "the model's output at its sample point was not computed"
+    },
+    {
+      "region": 5,
+      "why": "the model's output at its sample point was not computed"
+    },
+    {
+      "region": 6,
+      "why": "the model's output at its sample point was not computed"
+    },
+    {
+      "region": 7,
+      "why": "the model's output at its sample point was not computed"
+    },
+    {
+      "region": 8,
+      "why": "the model's output at its sample point was not computed"
+    },
+    {
+      "region": 9,
+      "why": "the model's output at its sample point was not computed"
+    },
+    {
+      "region": 10,
+      "why": "the model's output at its sample point was not computed"
+    },
+    {
+      "region": 11,
+      "why": "the model's output at its sample point was not computed"
+    },
+    {
+      "region": 12,
+      "why": "the model's output at its sample point was not computed"
+    },
+    {
+      "region": 13,
+      "why": "the model's output at its sample point was not computed"
+    },
+    {
+      "region": 14,
+      "why": "the model's output at its sample point was not computed"
+    },
+    {
+      "region": 15,
+      "why": "the model's output at its sample point was not computed"
+    },
+    {
+      "region": 16,
+      "why": "the model's output at its sample point was not computed"
+    }
+  ]
+}
