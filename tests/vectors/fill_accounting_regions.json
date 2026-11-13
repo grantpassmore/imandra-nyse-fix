@@ -1,0 +1,461 @@
+{
+ "source": "ImandraX region tests of step_fixed (subject: order fill accounting); prices in millionths of a dollar",
+ "cases": [
+  {
+   "name": "region_1",
+   "input": {
+    "r": {
+     "trans": "TNew",
+     "kind": "KOther",
+     "exec_id": 0,
+     "ref_id": 1,
+     "last_qty": 2,
+     "last_px": 3,
+     "cum_qty": 4
+    },
+    "s": {
+     "f_cum": 0,
+     "fills": []
+    }
+   },
+   "expected": {
+    "f_cum": 4,
+    "fills": []
+   }
+  },
+  {
+   "name": "region_2",
+   "input": {
+    "r": {
+     "trans": "TNew",
+     "kind": "KFill",
+     "exec_id": 1,
+     "ref_id": 2,
+     "last_qty": 0,
+     "last_px": 3,
+     "cum_qty": 4
+    },
+    "s": {
+     "f_cum": 0,
+     "fills": []
+    }
+   },
+   "expected": {
+    "f_cum": 4,
+    "fills": []
+   }
+  },
+  {
+   "name": "region_3",
+   "input": {
+    "r": {
+     "trans": "TNew",
+     "kind": "KFill",
+     "exec_id": 0,
+     "ref_id": 2,
+     "last_qty": 1,
+     "last_px": 3,
+     "cum_qty": 5
+    },
+    "s": {
+     "f_cum": 4,
+     "fills": [
+      {
+       "fid": 0,
+       "fqty": 6,
+       "fpx": 7
+      }
+     ]
+    }
+   },
+   "expected": {
+    "f_cum": 5,
+    "fills": [
+     {
+      "fid": 0,
+      "fqty": 6,
+      "fpx": 7
+     }
+    ]
+   }
+  },
+  {
+   "name": "region_4",
+   "input": {
+    "r": {
+     "trans": "TNew",
+     "kind": "KFill",
+     "exec_id": 0,
+     "ref_id": 2,
+     "last_qty": 1,
+     "last_px": 3,
+     "cum_qty": 5
+    },
+    "s": {
+     "f_cum": 4,
+     "fills": []
+    }
+   },
+   "expected": {
+    "f_cum": 5,
+    "fills": [
+     {
+      "fid": 0,
+      "fqty": 1,
+      "fpx": 3
+     }
+    ]
+   }
+  },
+  {
+   "name": "region_5",
+   "input": {
+    "r": {
+     "trans": "TCorrect",
+     "kind": "KFill",
+     "exec_id": 0,
+     "ref_id": 1,
+     "last_qty": 2,
+     "last_px": 3,
+     "cum_qty": 5
+    },
+    "s": {
+     "f_cum": 4,
+     "fills": []
+    }
+   },
+   "expected": {
+    "f_cum": 5,
+    "fills": []
+   }
+  },
+  {
+   "name": "region_6",
+   "input": {
+    "r": {
+     "trans": "TCorrect",
+     "kind": "KFill",
+     "exec_id": 5,
+     "ref_id": 0,
+     "last_qty": 1,
+     "last_px": 2,
+     "cum_qty": 4
+    },
+    "s": {
+     "f_cum": 3,
+     "fills": [
+      {
+       "fid": 5,
+       "fqty": 6,
+       "fpx": 7
+      },
+      {
+       "fid": 0,
+       "fqty": 8,
+       "fpx": 9
+      }
+     ]
+    }
+   },
+   "expected": {
+    "f_cum": 4,
+    "fills": [
+     {
+      "fid": 5,
+      "fqty": 6,
+      "fpx": 7
+     },
+     {
+      "fid": 0,
+      "fqty": 8,
+      "fpx": 9
+     }
+    ]
+   }
+  },
+  {
+   "name": "region_7",
+   "input": {
+    "r": {
+     "trans": "TCorrect",
+     "kind": "KFill",
+     "exec_id": 0,
+     "ref_id": 1,
+     "last_qty": 2,
+     "last_px": 3,
+     "cum_qty": 5
+    },
+    "s": {
+     "f_cum": 4,
+     "fills": [
+      {
+       "fid": 1,
+       "fqty": 6,
+       "fpx": 7
+      }
+     ]
+    }
+   },
+   "expected": {
+    "f_cum": 5,
+    "fills": [
+     {
+      "fid": 0,
+      "fqty": 2,
+      "fpx": 3
+     }
+    ]
+   }
+  },
+  {
+   "name": "region_8",
+   "input": {
+    "r": {
+     "trans": "TBust",
+     "kind": "KFill",
+     "exec_id": 0,
+     "ref_id": 1,
+     "last_qty": 2,
+     "last_px": 3,
+     "cum_qty": 4
+    },
+    "s": {
+     "f_cum": 0,
+     "fills": []
+    }
+   },
+   "expected": {
+    "f_cum": 4,
+    "fills": []
+   }
+  },
+  {
+   "name": "region_9",
+   "input": {
+    "r": {
+     "trans": "TNew",
+     "kind": "KOther",
+     "exec_id": 0,
+     "ref_id": 1,
+     "last_qty": 2,
+     "last_px": 3,
+     "cum_qty": null
+    },
+    "s": {
+     "f_cum": 0,
+     "fills": []
+    }
+   },
+   "expected": {
+    "f_cum": 0,
+    "fills": []
+   }
+  },
+  {
+   "name": "region_10",
+   "input": {
+    "r": {
+     "trans": "TNew",
+     "kind": "KFill",
+     "exec_id": 1,
+     "ref_id": 2,
+     "last_qty": 0,
+     "last_px": 3,
+     "cum_qty": null
+    },
+    "s": {
+     "f_cum": 0,
+     "fills": []
+    }
+   },
+   "expected": {
+    "f_cum": 0,
+    "fills": []
+   }
+  },
+  {
+   "name": "region_11",
+   "input": {
+    "r": {
+     "trans": "TNew",
+     "kind": "KFill",
+     "exec_id": 0,
+     "ref_id": 2,
+     "last_qty": 1,
+     "last_px": 3,
+     "cum_qty": null
+    },
+    "s": {
+     "f_cum": 4,
+     "fills": [
+      {
+       "fid": 0,
+       "fqty": 5,
+       "fpx": 6
+      }
+     ]
+    }
+   },
+   "expected": {
+    "f_cum": 4,
+    "fills": [
+     {
+      "fid": 0,
+      "fqty": 5,
+      "fpx": 6
+     }
+    ]
+   }
+  },
+  {
+   "name": "region_12",
+   "input": {
+    "r": {
+     "trans": "TNew",
+     "kind": "KFill",
+     "exec_id": 0,
+     "ref_id": 2,
+     "last_qty": 1,
+     "last_px": 3,
+     "cum_qty": null
+    },
+    "s": {
+     "f_cum": 4,
+     "fills": []
+    }
+   },
+   "expected": {
+    "f_cum": 4,
+    "fills": [
+     {
+      "fid": 0,
+      "fqty": 1,
+      "fpx": 3
+     }
+    ]
+   }
+  },
+  {
+   "name": "region_13",
+   "input": {
+    "r": {
+     "trans": "TCorrect",
+     "kind": "KFill",
+     "exec_id": 0,
+     "ref_id": 1,
+     "last_qty": 2,
+     "last_px": 3,
+     "cum_qty": null
+    },
+    "s": {
+     "f_cum": 4,
+     "fills": []
+    }
+   },
+   "expected": {
+    "f_cum": 4,
+    "fills": []
+   }
+  },
+  {
+   "name": "region_14",
+   "input": {
+    "r": {
+     "trans": "TCorrect",
+     "kind": "KFill",
+     "exec_id": 4,
+     "ref_id": 0,
+     "last_qty": 1,
+     "last_px": 2,
+     "cum_qty": null
+    },
+    "s": {
+     "f_cum": 3,
+     "fills": [
+      {
+       "fid": 4,
+       "fqty": 5,
+       "fpx": 6
+      },
+      {
+       "fid": 0,
+       "fqty": 7,
+       "fpx": 8
+      }
+     ]
+    }
+   },
+   "expected": {
+    "f_cum": 3,
+    "fills": [
+     {
+      "fid": 4,
+      "fqty": 5,
+      "fpx": 6
+     },
+     {
+      "fid": 0,
+      "fqty": 7,
+      "fpx": 8
+     }
+    ]
+   }
+  },
+  {
+   "name": "region_15",
+   "input": {
+    "r": {
+     "trans": "TCorrect",
+     "kind": "KFill",
+     "exec_id": 0,
+     "ref_id": 1,
+     "last_qty": 2,
+     "last_px": 3,
+     "cum_qty": null
+    },
+    "s": {
+     "f_cum": 4,
+     "fills": [
+      {
+       "fid": 1,
+       "fqty": 5,
+       "fpx": 6
+      }
+     ]
+    }
+   },
+   "expected": {
+    "f_cum": 4,
+    "fills": [
+     {
+      "fid": 0,
+      "fqty": 2,
+      "fpx": 3
+     }
+    ]
+   }
+  },
+  {
+   "name": "region_16",
+   "input": {
+    "r": {
+     "trans": "TBust",
+     "kind": "KFill",
+     "exec_id": 0,
+     "ref_id": 1,
+     "last_qty": 2,
+     "last_px": 3,
+     "cum_qty": null
+    },
+    "s": {
+     "f_cum": 0,
+     "fills": []
+    }
+   },
+   "expected": {
+    "f_cum": 0,
+    "fills": []
+   }
+  }
+ ]
+}

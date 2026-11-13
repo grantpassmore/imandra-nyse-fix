@@ -200,8 +200,9 @@ async def test_resend_mode_replays_application_messages_with_possdup():
         conn = gw.active
         from nyse_pillar_fix.messages import NewOrderSingle, Routing
 
-        order = NewOrderSingle(cl_ord_id="R1", symbol="IBM", side="1", order_qty=10, price="5",
-                               routing=Routing(mpid="ABCD"))
+        order = NewOrderSingle(
+            cl_ord_id="R1", symbol="IBM", side="1", order_qty=10, price="5", routing=Routing(mpid="ABCD")
+        )
         seq = await s.send(order.to_message())
         await asyncio.sleep(0.05)
         conn.account.next_in = seq  # pretend the gateway lost the order

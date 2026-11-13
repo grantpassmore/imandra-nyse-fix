@@ -17,6 +17,7 @@ from .codec import Message
 from .enums import (
     TERMINAL_ORD_STATUSES,
     BulkCancelCode,
+    ExecTransType,
     ExecType,
     MsgType,
     OrdStatus,
@@ -79,11 +80,59 @@ class OrderState:
     ord_status: OrdStatus | str | None = None
     cum_qty: int = 0
     leaves_qty: int | None = None
-    avg_px: Decimal | None = None
     reports: list[ExecutionReport] = field(default_factory=list, repr=False)
     cancel_rejects: list[OrderCancelReject] = field(default_factory=list, repr=False)
+    #: Live (not busted) fills by ExecID: (LastQty, LastPx). Busts and corrections
+    #: reference the fill they change through ExecRefID.
+    fills: dict[str, tuple[int, Decimal]] = field(default_factory=dict, repr=False)
     _cond: asyncio.Condition = field(default_factory=asyncio.Condition, repr=False)
-    _notional: Decimal = field(default=Decimal(0), repr=False)
+
+    @property
+    def notional(self) -> Decimal:
+        """Filled notional of the live fills."""
+        return sum((px * qty for qty, px in self.fills.values()), Decimal(0))
+
+    @property
+    def avg_px(self) -> Decimal | None:
+        """Average price of the live fills, or ``None`` when nothing is filled."""
+        qty = sum(q for q, _ in self.fills.values())
+        return self.notional / qty if qty > 0 else None
+
+    def apply_fill_accounting(self, report: ExecutionReport) -> None:
+        """Update live fills and CumQty from one Execution Report.
+
+        * a new fill (ExecTransType 0, ExecType 1 or 2) is recorded under its ExecID,
+          unless that ExecID is already recorded (a duplicate report);
+        * a trade bust (ExecTransType 1) removes the fill named by ExecRefID;
+        * a trade correction (ExecTransType 2) replaces the fill named by ExecRefID with
+          the corrected LastQty/LastPx under the correction's ExecID.
+        """
+        trans = report.exec_trans_type
+        if trans in (ExecTransType.NEW, None):
+            if (
+                report.exec_type in (ExecType.PARTIAL_FILL, ExecType.FILL)
+                and report.last_qty is not None
+                and report.last_qty > 0
+                and report.last_px is not None
+                and report.exec_id is not None
+                and report.exec_id not in self.fills
+            ):
+                self.fills[report.exec_id] = (report.last_qty, report.last_px)
+        elif trans == ExecTransType.CANCEL:
+            self.fills.pop(report.exec_ref_id or "", None)
+        elif trans == ExecTransType.CORRECT:
+            ref = report.exec_ref_id or ""
+            if (
+                ref in self.fills
+                and report.exec_id is not None
+                and (report.exec_id == ref or report.exec_id not in self.fills)
+                and report.last_qty is not None
+                and report.last_px is not None
+            ):
+                del self.fills[ref]
+                self.fills[report.exec_id] = (report.last_qty, report.last_px)
+        if report.cum_qty is not None:
+            self.cum_qty = report.cum_qty
 
     @property
     def symbol(self) -> str:
@@ -330,16 +379,11 @@ class PillarClient:
         elif report.exec_type in (ExecType.CANCELED, ExecType.REJECTED) and key in self._pending:
             self._pending.pop(key, None)
             self._pending_replace.pop(key, None)
+        state.apply_fill_accounting(report)
         if report.ord_status is not None and report.ord_status != OrdStatus.REPLACED:
             state.ord_status = report.ord_status
         elif report.ord_status == OrdStatus.REPLACED:
             state.ord_status = OrdStatus.NEW if not state.cum_qty else OrdStatus.PARTIALLY_FILLED
-        if report.is_fill and report.last_qty and report.last_px is not None:
-            state._notional += report.last_px * report.last_qty
-        if report.cum_qty is not None:
-            state.cum_qty = report.cum_qty
-        if state.cum_qty:
-            state.avg_px = state._notional / state.cum_qty if state._notional else state.avg_px
         if report.leaves_qty is not None:
             state.leaves_qty = report.leaves_qty
         return state
