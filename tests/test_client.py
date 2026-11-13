@@ -142,3 +142,85 @@ def test_execution_report_parsing():
     assert er.exec_type is ExecType.BILLABLE_CANCEL and er.last_px == Decimal("12.34")
     assert er.transact_time.microsecond == 123000
     assert er.is_priority_update and not er.is_fill
+
+
+# --- Regression tests for findings from ImandraX (order fill accounting) ---------------
+
+
+def _fill_state():
+    from nyse_pillar_fix.client import OrderState
+
+    req = NewOrderSingleForTest()
+    return OrderState(request=req, cl_ord_id=req.cl_ord_id)
+
+
+def NewOrderSingleForTest():
+    from nyse_pillar_fix.messages import NewOrderSingle, Routing
+
+    return NewOrderSingle(
+        cl_ord_id="O1", symbol="IBM", side=Side.BUY, order_qty=10_000, price="200", routing=Routing(mpid="ABCD")
+    )
+
+
+def _er(trans, exec_id, last_qty, last_px, cum_qty, ref=None, exec_type="1"):
+    fields = [
+        (T.ClOrdID, "O1"),
+        (T.ExecTransType, trans),
+        (T.ExecType, exec_type),
+        (T.OrdStatus, exec_type),
+        (T.ExecID, exec_id),
+        (T.LastQty, last_qty),
+        (T.LastPx, last_px),
+        (T.CumQty, cum_qty),
+    ]
+    if ref is not None:
+        fields.append((T.ExecRefID, ref))
+    return ExecutionReport.from_message(Message("8", fields))
+
+
+def _client_with(state):
+    cfg = SessionConfig(sender_comp_id="TEST1", target_comp_id=Market.NYSE, username="TEST1", password="pw")
+    client = PillarClient(cfg, mpid="ABCD")
+    client.orders[state.cl_ord_id] = state
+    return client
+
+
+def test_bust_removes_fill_from_notional_and_avg_px():
+    # ImandraX counterexample: Fill q=1237 then Bust of that fill.
+    state = _fill_state()
+    client = _client_with(state)
+    client._apply_report(_er("0", "E1", 1237, "150.25", 1237))
+    client._apply_report(_er("1", "E2", 1237, "150.25", 0, ref="E1"))
+    assert state.cum_qty == 0
+    assert state.notional == 0
+    assert state.avg_px is None
+
+
+def test_bust_then_new_fill_has_correct_avg_px():
+    state = _fill_state()
+    client = _client_with(state)
+    client._apply_report(_er("0", "E1", 100, "10", 100))
+    client._apply_report(_er("1", "E2", 100, "10", 0, ref="E1"))
+    client._apply_report(_er("0", "E3", 50, "20", 50))
+    assert state.avg_px == Decimal("20")
+
+
+def test_correction_replaces_the_corrected_fill():
+    # ImandraX counterexample: Fill 9404, then Correct that fill to 9403.
+    state = _fill_state()
+    client = _client_with(state)
+    client._apply_report(_er("0", "E1", 9404, "10", 9404))
+    client._apply_report(_er("2", "E2", 9403, "11", 9403, ref="E1"))
+    assert state.cum_qty == 9403
+    assert state.notional == Decimal(9403 * 11)
+    assert state.avg_px == Decimal("11")
+
+
+def test_duplicate_exec_id_is_counted_once():
+    # ImandraX counterexample: two fill reports with the same ExecID.
+    state = _fill_state()
+    client = _client_with(state)
+    client._apply_report(_er("0", "E1", 841, "10", 841))
+    client._apply_report(_er("0", "E1", 841, "10", 841))
+    assert state.notional == Decimal(8410)
+    assert state.avg_px == Decimal("10")
